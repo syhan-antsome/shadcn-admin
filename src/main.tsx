@@ -12,7 +12,10 @@ import { useAuthStore } from '@/stores/auth-store'
 import { handleServerError } from '@/utils/handle-server-error'
 import { FontProvider } from './context/font-context'
 import { ThemeProvider } from './context/theme-context'
+
 import './index.css'
+import './lib/i18n' // i18n 설정
+
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 

@@ -9,8 +9,11 @@ import { TasksDialogs } from './components/tasks-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
 import { tasks } from './data/tasks'
+import { useTranslation } from 'react-i18next' // i18n hook 추가
 
 export default function Tasks() {
+  const { t } = useTranslation() // 번역 hook
+
   return (
     <TasksProvider>
       <Header fixed>
@@ -24,7 +27,7 @@ export default function Tasks() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Tasks</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('page.tasks')}</h2>
             <p className='text-muted-foreground'>
               Here&apos;s a list of your tasks for this month!
             </p>

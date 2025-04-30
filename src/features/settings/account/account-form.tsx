@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { CalendarIcon, CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next' // i18n hook 추가
 import { cn } from '@/lib/utils'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
@@ -30,6 +31,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { toast } from 'sonner' // 알림을 위한 toast 추가
 
 const languages = [
   { label: 'English', value: 'en' },
@@ -63,18 +65,41 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>
 
 // This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-  name: '',
-}
+// const defaultValues: Partial<AccountFormValues> = {
+//   name: '',
+// }
 
 export function AccountForm() {
+  // i18next hooks 추가
+  const { t, i18n } = useTranslation()
+  
+  // 현재 언어로 초기값 설정
+  const currentLanguage = i18n.language || 'en'
+
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
-    defaultValues,
+    defaultValues: {
+      name: '',
+      language: currentLanguage, // 현재 언어로 초기값 설정
+    },
   })
 
   function onSubmit(data: AccountFormValues) {
+    // 폼 제출 시 언어 변경 적용
+    if (data.language) {
+      i18n.changeLanguage(data.language) // 언어 변경
+      toast.success(t('settings.language.changed')) // 언어 변경 성공 알림
+    }
     showSubmittedData(data)
+  }
+
+  // 언어 변경 핸들러 함수 추가 - 즉시 변경 옵션
+  const handleLanguageChange = (languageCode: string) => {
+    form.setValue('language', languageCode)
+    
+    // 즉시 언어 변경 적용 (선택 사항)
+    i18n.changeLanguage(languageCode)
+    toast.success(t('settings.language.changed', 'Language changed successfully'))
   }
 
   return (
@@ -178,6 +203,8 @@ export function AccountForm() {
                             key={language.value}
                             onSelect={() => {
                               form.setValue('language', language.value)
+                              // 언어 변경 함수 호출
+                              handleLanguageChange(language.value)
                             }}
                           >
                             <CheckIcon
@@ -197,7 +224,7 @@ export function AccountForm() {
                 </PopoverContent>
               </Popover>
               <FormDescription>
-                This is the language that will be used in the dashboard.
+                {t('settings.language.description', 'This is the language that will be used in the dashboard.')}
               </FormDescription>
               <FormMessage />
             </FormItem>

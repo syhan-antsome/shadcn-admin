@@ -13,8 +13,11 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import SidebarNav from './components/sidebar-nav'
+import { useTranslation } from 'react-i18next' // i18n hook 추가
 
 export default function Settings() {
+  const { t } = useTranslation() // 번역 hook
+  
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -29,7 +32,7 @@ export default function Settings() {
       <Main fixed>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Settings
+            {t('page.tasks')}
           </h1>
           <p className='text-muted-foreground'>
             Manage your account settings and set e-mail preferences.
