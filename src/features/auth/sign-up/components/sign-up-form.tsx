@@ -20,10 +20,10 @@ type SignUpFormProps = HTMLAttributes<HTMLFormElement>
 
 const formSchema = z
   .object({
-    email: z
+    userId: z
       .string()
-      .min(1, { message: 'Please enter your email' })
-      .email({ message: 'Invalid email address' }),
+      .min(1, { message: 'Please enter your userId' })
+      .userId({ message: 'Invalid userId address' }),
     password: z
       .string()
       .min(1, {
@@ -45,7 +45,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      userId: '',
       password: '',
       confirmPassword: '',
     },
@@ -70,7 +70,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
       >
         <FormField
           control={form.control}
-          name='email'
+          name='userId'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>

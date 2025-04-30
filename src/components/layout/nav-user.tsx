@@ -1,4 +1,5 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
 import {
   BadgeCheck,
   Bell,
@@ -23,17 +24,30 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { toast } from 'sonner'
 
 export function NavUser({
   user,
 }: {
   user: {
     name: string
-    email: string
+    userId: string
     avatar: string
   }
 }) {
   const { isMobile } = useSidebar()
+  const navigate = useNavigate()
+  const auth = useAuthStore().auth
+
+  // 로그아웃 처리함수
+  const handleLogout = () => {
+    // 스토어의 reset 함수 호출
+    auth.reset()
+    // 로그아웃 성공 메시지 표시
+    toast.success('로그아웃 되었습니다.')
+    // 로그인 페이지로 리디렉션
+    navigate({ to: '/sign-in' })
+  }
 
   return (
     <SidebarMenu>
@@ -50,7 +64,7 @@ export function NavUser({
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight'>
                 <span className='truncate font-semibold'>{user.name}</span>
-                <span className='truncate text-xs'>{user.email}</span>
+                <span className='truncate text-xs'>{user.userId}</span>
               </div>
               <ChevronsUpDown className='ml-auto size-4' />
             </SidebarMenuButton>
@@ -69,7 +83,7 @@ export function NavUser({
                 </Avatar>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='truncate font-semibold'>{user.name}</span>
-                  <span className='truncate text-xs'>{user.email}</span>
+                  <span className='truncate text-xs'>{user.userId}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -102,7 +116,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

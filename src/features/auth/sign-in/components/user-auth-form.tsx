@@ -2,6 +2,8 @@ import { HTMLAttributes, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
 import { Link } from '@tanstack/react-router'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
@@ -16,43 +18,61 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
+import { toast } from 'sonner'
+import SHA256 from 'crypto-js/sha256'
 
 type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
 const formSchema = z.object({
-  email: z
+  userId: z
     .string()
-    .min(1, { message: 'Please enter your email' })
-    .email({ message: 'Invalid email address' }),
+    .min(1, { message: '이메일을 입력해주세요' })
+    .email({ message: '유효한 이메일 주소를 입력해주세요' }),
   password: z
     .string()
     .min(1, {
-      message: 'Please enter your password',
+      message: '비밀번호를 입력해주세요',
     })
-    .min(7, {
-      message: 'Password must be at least 7 characters long',
+    .min(4, {
+      message: 'Password must be at least 4 characters long',
     }),
 })
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+  const { redirect } = useSearch({ from: '/(auth)/sign-in' })
+  const auth = useAuthStore().auth
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      userId: '',
       password: '',
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
 
-    setTimeout(() => {
+    try {
+      // eslint-disable-next-line no-console
+      await auth.login({
+        userId: data.userId,
+        password: SHA256(data.password).toString(),
+      })
+
+      toast.success('로그인 성공!')
+
+      // 리디렉션 파라미터가 있으면 해당 경로로, 없으면 루트로 이동
+      navigate({ to: redirect || '/' })
+    } catch (error) {
+      // 오류는 auth.login에서 처리되므로 여기서는 추가 처리 불필요
+      // eslint-disable-next-line no-console
+      console.error('Login form error:', error)
+    } finally {
       setIsLoading(false)
-    }, 3000)
+    }
   }
 
   return (
@@ -64,7 +84,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       >
         <FormField
           control={form.control}
-          name='email'
+          name='userId'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>

@@ -17,10 +17,10 @@ import { Input } from '@/components/ui/input'
 type ForgotFormProps = HTMLAttributes<HTMLFormElement>
 
 const formSchema = z.object({
-  email: z
+  userId: z
     .string()
-    .min(1, { message: 'Please enter your email' })
-    .email({ message: 'Invalid email address' }),
+    .min(1, { message: 'Please enter your userId' })
+    .userId({ message: 'Invalid userId address' }),
 })
 
 export function ForgotPasswordForm({ className, ...props }: ForgotFormProps) {
@@ -28,7 +28,7 @@ export function ForgotPasswordForm({ className, ...props }: ForgotFormProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: '' },
+    defaultValues: { userId: '' },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
@@ -50,7 +50,7 @@ export function ForgotPasswordForm({ className, ...props }: ForgotFormProps) {
       >
         <FormField
           control={form.control}
-          name='email'
+          name='userId'
           render={({ field }) => (
             <FormItem className='space-y-1'>
               <FormLabel>Email</FormLabel>

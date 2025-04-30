@@ -20,7 +20,7 @@ export default function Otp() {
           </CardTitle>
           <CardDescription>
             Please enter the authentication code. <br /> We have sent the
-            authentication code to your email.
+            authentication code to your userId.
           </CardDescription>
         </CardHeader>
         <CardContent>

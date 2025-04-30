@@ -46,7 +46,7 @@ export default function SignIn2() {
           <div className='flex flex-col space-y-2 text-left'>
             <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
             <p className='text-muted-foreground text-sm'>
-              Enter your email and password below <br />
+              Enter your userId and password below <br />
               to log into your account
             </p>
           </div>

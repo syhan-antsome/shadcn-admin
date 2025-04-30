@@ -2,7 +2,7 @@ import { LinkProps } from '@tanstack/react-router'
 
 interface User {
   name: string
-  email: string
+  userId: string
   avatar: string
 }
 
