@@ -27,6 +27,7 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedUsersIndexImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedKiosksIndexImport } from './routes/_authenticated/kiosks/index'
 import { Route as AuthenticatedHelpCenterIndexImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChatsIndexImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexImport } from './routes/_authenticated/apps/index'
@@ -135,6 +136,12 @@ const AuthenticatedSettingsIndexRoute = AuthenticatedSettingsIndexImport.update(
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any,
 )
+
+const AuthenticatedKiosksIndexRoute = AuthenticatedKiosksIndexImport.update({
+  id: '/kiosks/',
+  path: '/kiosks/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexImport.update({
@@ -327,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/kiosks/': {
+      id: '/_authenticated/kiosks/'
+      path: '/kiosks'
+      fullPath: '/kiosks'
+      preLoaderRoute: typeof AuthenticatedKiosksIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -382,6 +396,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedKiosksIndexRoute: typeof AuthenticatedKiosksIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
@@ -392,6 +407,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedKiosksIndexRoute: AuthenticatedKiosksIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
@@ -420,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/kiosks': typeof AuthenticatedKiosksIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -444,6 +461,7 @@ export interface FileRoutesByTo {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/kiosks': typeof AuthenticatedKiosksIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -471,6 +489,7 @@ export interface FileRoutesById {
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/kiosks/': typeof AuthenticatedKiosksIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -499,6 +518,7 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/help-center'
+    | '/kiosks'
     | '/settings/'
     | '/tasks'
     | '/users'
@@ -522,6 +542,7 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/help-center'
+    | '/kiosks'
     | '/settings'
     | '/tasks'
     | '/users'
@@ -547,6 +568,7 @@ export interface FileRouteTypes {
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/kiosks/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
@@ -612,6 +634,7 @@ export const routeTree = rootRoute
         "/_authenticated/apps/",
         "/_authenticated/chats/",
         "/_authenticated/help-center/",
+        "/_authenticated/kiosks/",
         "/_authenticated/tasks/",
         "/_authenticated/users/"
       ]
@@ -687,6 +710,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/help-center/": {
       "filePath": "_authenticated/help-center/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/kiosks/": {
+      "filePath": "_authenticated/kiosks/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/settings/": {

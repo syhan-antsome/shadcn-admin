@@ -3,6 +3,7 @@ import {
   IconBrowserCheck,
   IconBug,
   IconChecklist,
+  IconDeviceDesktop,
   IconError404,
   IconHelp,
   IconLayoutDashboard,
@@ -53,6 +54,11 @@ export const sidebarData: SidebarData = {
           title: 'Dashboard',
           url: '/',
           icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Kiosks',
+          url: '/kiosks',
+          icon: IconDeviceDesktop,
         },
         {
           title: 'Tasks',
