@@ -62,3 +62,26 @@ export const filterSchema = z.object({
 export type KioskFilter = z.infer<typeof filterSchema>
 
 export type KiosksDialogType = 'create' | 'update' | 'delete' | null
+
+// 정렬 및 필터링 매개변수용 타입 정의
+export type KioskParams = {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  status?: string;
+  type?: string;
+  location?: string;
+  search?: string;
+  startDate?: Date;
+  endDate?: Date;
+  keyword?: string;
+  kioskTp?: string;
+};
+
+// 서버 응답 타입
+export type KioskResponse = {
+  data: Kiosk[];
+  totalCount: number;
+  pageCount: number;
+};

@@ -28,11 +28,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { kioskStatusEnum, kioskTypeEnum } from "../data/schema"
+import { kioskStatusEnum, kioskTypeEnum, KioskParams } from "../data/schema"
 
 interface KiosksFilterProps {
-  onFilterChange: (values: FilterValues) => void
+  onFilterChange: (values: Partial<KioskParams>) => void
   isLoading: boolean
+  currentFilter: KioskParams
 }
 
 const filterFormSchema = z.object({
@@ -45,19 +46,21 @@ const filterFormSchema = z.object({
 
 type FilterValues = z.infer<typeof filterFormSchema>
 
-export function KiosksFilter({ onFilterChange, isLoading }: KiosksFilterProps) {
+export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: KiosksFilterProps) {
   const form = useForm<FilterValues>({
     resolver: zodResolver(filterFormSchema),
+    // 초기값 설정
     defaultValues: {
-      startDate: undefined,
-      endDate: undefined,
-      status: undefined,
-      type: undefined,
-      location: "",
+      startDate: currentFilter.startDate,
+      endDate: currentFilter.endDate,
+      status: currentFilter.status,
+      type: currentFilter.type,
+      location: currentFilter.location || "",
     },
   })
 
   function onSubmit(data: FilterValues) {
+    // 필터링 값이 변경될 때마다 부모 컴포넌트에 알림
     onFilterChange(data)
   }
 
@@ -69,6 +72,7 @@ export function KiosksFilter({ onFilterChange, isLoading }: KiosksFilterProps) {
       status: undefined,
       type: undefined,
       location: "",
+      page: 1, // 페이지 초기화
     })
   }
 
