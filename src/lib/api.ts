@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 // 환경 변수에서 API URL 가져오기
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8051'
+const API_BASE_VERSION = import.meta.env.VITE_API_VERSION || 'v1'
 
 /**
  * 인증 토큰이 포함된 API 요청을 수행하는 유틸리티 함수
@@ -18,7 +19,7 @@ export const api = {
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
     
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+    const response = await fetch(`${API_BASE_URL}/${API_BASE_VERSION}/${url}`, {
       ...options,
       headers
     })
