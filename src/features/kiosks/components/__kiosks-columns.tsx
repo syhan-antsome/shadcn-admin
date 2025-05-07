@@ -1,4 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table"
+import { format } from "date-fns"
+import { ko } from "date-fns/locale"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,14 +14,14 @@ import {
 import { Kiosk } from "../data/schema"
 import { Badge } from "@/components/ui/badge"
 
-export const columns: ColumnDef<Kiosk>[] = [
+export const __columns: ColumnDef<Kiosk>[] = [
   {
-    accessorKey: "kioskId",
+    accessorKey: "id",
     header: "ID",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("kioskId")}</div>,
+    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "kioskNm",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -33,7 +35,7 @@ export const columns: ColumnDef<Kiosk>[] = [
     },
   },
   {
-    accessorKey: "position",
+    accessorKey: "location",
     header: "위치",
   },
   {
@@ -77,15 +79,18 @@ export const columns: ColumnDef<Kiosk>[] = [
     },
   },
   {
-    accessorKey: "kioskTp",
+    accessorKey: "type",
     header: "유형",
     cell: ({ row }) => {
-      const type = row.getValue("kioskTp") as string
+      const type = row.getValue("type") as string
 
       const getTypeLabel = (type: string) => {
         switch (type) {
-          case "LPR": return "LPR"
-          case "UNMAN": return "무인장비"
+          case "payment": return "결제"
+          case "information": return "정보"
+          case "order": return "주문"
+          case "ticket": return "발권"
+          case "check-in": return "체크인"
           default: return type
         }
       }
@@ -94,12 +99,20 @@ export const columns: ColumnDef<Kiosk>[] = [
     },
   },
   {
-    accessorKey: "regDt",
+    accessorKey: "installationDate",
     header: "설치일",
+    cell: ({ row }) => {
+      const date = row.getValue("installationDate") as Date
+      return format(date, "yyyy-MM-dd", { locale: ko })
+    },
   },
   {
     accessorKey: "lastConnectionDate",
     header: "마지막 연결",
+    cell: ({ row }) => {
+      const date = row.getValue("lastConnectionDate") as Date
+      return format(date, "yyyy-MM-dd HH:mm:ss", { locale: ko })
+    },
   },
   {
     id: "actions",

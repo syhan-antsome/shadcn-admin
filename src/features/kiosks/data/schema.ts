@@ -18,7 +18,7 @@ export const kioskTypeEnum = z.enum([
 ])
 
 // 키오스크 스키마 정의
-export const kioskSchema = z.object({
+export const __kioskSchema = z.object({
   id: z.string(),
   name: z.string(),
   serialNumber: z.string(),
@@ -31,6 +31,18 @@ export const kioskSchema = z.object({
   model: z.string(),
   manufacturer: z.string(),
   softwareVersion: z.string().optional(),
+})
+
+export const kioskSchema = z.object({
+  kioskId: z.string(),
+  kioskNm: z.string(),
+  kioskTp: z.string(),
+  status: kioskStatusEnum,
+  modDt: z.string().nullable(),
+  modUserId: z.string().nullable(),
+  position: z.string(),
+  regDt: z.string(),
+  regUserId: z.string(),
 })
 
 // 키오스크 타입 추출

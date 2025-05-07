@@ -149,7 +149,21 @@ export const kiosks: Kiosk[] = [
 export async function getKiosks(): Promise<Kiosk[]> {
   try {
     // 실제 API 호출로 변경
-    const response = await api.get<Kiosk[]>("/api/kiosks")
+    const params = {
+      page: 1,
+      pageRowNum: 10,
+      keyword: '',
+      kioskTp: ''
+    }
+
+    const searchParams = new URLSearchParams()
+    for (const [key, value] of Object.entries(params)) {
+      searchParams.append(key, value)
+    }
+
+    const url = `/kiosk?${searchParams.toString()}`
+
+    const response = await api.get<Kiosk[]>(url)
     return response
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -180,7 +194,7 @@ export async function getFilteredKiosks(
     const queryString = params.toString() ? `?${params.toString()}` : ""
     
     // API 호출
-    const response = await api.get<Kiosk[]>(`/api/kiosks/filter${queryString}`)
+    const response = await api.get<Kiosk[]>(`/kiosk/filter${queryString}`)
     return response
   } catch (error) {
     // eslint-disable-next-line no-console

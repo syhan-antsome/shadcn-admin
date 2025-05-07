@@ -25,7 +25,7 @@ export default function Kiosks() {
   })
 
   // 키오스크 데이터 파싱
-  const kioskList = kioskListSchema.parse(kiosks || [])
+  const kioskList = kioskListSchema.parse(kiosks?.listData || [])
 
   // 에러 처리
   useEffect(() => {

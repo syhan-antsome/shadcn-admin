@@ -24,7 +24,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
+import { kioskTypes } from '../data/data'
 
 const formSchema = z.object({
   email: z
@@ -104,7 +104,7 @@ export function KiosksInviteDialog({ open, onOpenChange }: Props) {
                     defaultValue={field.value}
                     onValueChange={field.onChange}
                     placeholder='Select a role'
-                    items={userTypes.map(({ label, value }) => ({
+                    items={kioskTypes.map(({ label, value }) => ({
                       label,
                       value,
                     }))}

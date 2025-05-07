@@ -25,7 +25,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
+import { kioskTypes } from '../data/data'
 import { Kiosk } from '../data/schema'
 
 const formSchema = z
@@ -259,7 +259,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
                       onValueChange={field.onChange}
                       placeholder='Select a role'
                       className='col-span-4'
-                      items={userTypes.map(({ label, value }) => ({
+                      items={kioskTypes.map(({ label, value }) => ({
                         label,
                         value,
                       }))}

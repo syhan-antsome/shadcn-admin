@@ -3,7 +3,7 @@ import { IconSearch } from '@tabler/icons-react'
 import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { userTypes } from '../data/data'
+import { kioskTypes } from '../data/data'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
 
 interface DataTableToolbarProps<TData> {
@@ -19,12 +19,12 @@ export function DataTableToolbar<TData>({
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
         <Input
-          placeholder='Filter users...'
+          placeholder='Filter kiosks...'
           value={
-            (table.getColumn('username')?.getFilterValue() as string) ?? ''
+            (table.getColumn('kioskNm')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('username')?.setFilterValue(event.target.value)
+            table.getColumn('kioskNm')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />
@@ -32,20 +32,20 @@ export function DataTableToolbar<TData>({
           {table.getColumn('status') && (
             <DataTableFacetedFilter
               column={table.getColumn('status')}
-              title='Status'
+              title='상태'
               options={[
-                { label: 'Active', value: 'active' },
-                { label: 'Inactive', value: 'inactive' },
-                { label: 'Invited', value: 'invited' },
-                { label: 'Suspended', value: 'suspended' },
+                { label: '활성', value: 'active' },
+                { label: '비활성', value: 'inactive' },
+                { label: '유지보수', value: 'maintenance' },
+                { label: '오프라인', value: 'offline' },
               ]}
             />
           )}
-          {table.getColumn('role') && (
+          {table.getColumn('kioskTp') && (
             <DataTableFacetedFilter
-              column={table.getColumn('role')}
-              title='Role'
-              options={userTypes.map((t) => ({ ...t }))}
+              column={table.getColumn('kioskTp')}
+              title='유형'
+              options={kioskTypes.map((t) => ({ ...t }))}
             />
           )}
         </div>

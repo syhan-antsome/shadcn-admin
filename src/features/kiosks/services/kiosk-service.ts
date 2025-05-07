@@ -1,7 +1,7 @@
 import { api } from '@/lib/api';
 import { Kiosk } from '../data/schema'; 
 
-const API_URL = '/api/kiosks';
+const API_URL = '/kiosk';
 
 export const kioskService = {
     getAll: async (): Promise<Kiosk[]> => {

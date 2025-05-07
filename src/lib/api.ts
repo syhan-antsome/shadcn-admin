@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/auth-store'
 // import { toast } from 'sonner'
 
 // 환경 변수에서 API URL 가져오기
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8051'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8051/api'
 const API_BASE_VERSION = import.meta.env.VITE_API_VERSION || 'v1'
 
 /**
@@ -19,7 +19,7 @@ export const api = {
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
     
-    const response = await fetch(`${API_BASE_URL}/${API_BASE_VERSION}/${url}`, {
+    const response = await fetch(`${API_BASE_URL}/${API_BASE_VERSION}${url}`, {
       ...options,
       headers
     })
