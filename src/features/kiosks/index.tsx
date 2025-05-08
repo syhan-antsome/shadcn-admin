@@ -67,20 +67,6 @@ export default function Kiosks() {
   const total = data?.total || 0
   const pageCount = data?.pageCount || 1
 
-  // // 키오스크 데이터 파싱
-  // const kioskList = kioskListSchema.parse(kiosks?.listData || [])
-
-  // // 에러 처리
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(
-  //       '데이터를 불러오는 중 오류가 발생했습니다. 로컬 데이터를 표시합니다.'
-  //     )
-  //     // eslint-disable-next-line no-console
-  //     console.error('Error fetching kiosks:', error)
-  //   }
-  // }, [error])
-
   // eslint-disable-next-line no-console
   console.log('data >> ', data)
   // eslint-disable-next-line no-console

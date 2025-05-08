@@ -40,7 +40,13 @@ export const KioskService = {
     const queryString = searchParams.toString()
     const url = queryString ? `${API_URL}?${queryString}` : API_URL
 
-    return await api.get(url)
+    // API 호출
+    const response = await api.get(url)
+    return {
+      data: response.listData,
+      total: parseInt(response.listTotal, 10),
+      pageCount: Math.ceil(parseInt(response.listTotal, 10) / (params.pageRowNum || 10))
+    };
   },
   getById: async (id: string): Promise<Kiosk> => {
     return await api.get<Kiosk>(`${API_URL}/${id}`)

@@ -117,7 +117,7 @@ export const columns: ColumnDef<Kiosk>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>작업</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(kiosk.id)}
+              onClick={() => navigator.clipboard.writeText(kiosk.kioskId)}
             >
               ID 복사
             </DropdownMenuItem>

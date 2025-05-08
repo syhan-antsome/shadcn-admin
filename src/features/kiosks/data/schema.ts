@@ -17,22 +17,6 @@ export const kioskTypeEnum = z.enum([
   "check-in"
 ])
 
-// 키오스크 스키마 정의
-export const __kioskSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  serialNumber: z.string(),
-  location: z.string(),
-  status: kioskStatusEnum,
-  type: kioskTypeEnum,
-  ipAddress: z.string().optional(),
-  lastConnectionDate: z.date(),
-  installationDate: z.date(),
-  model: z.string(),
-  manufacturer: z.string(),
-  softwareVersion: z.string().optional(),
-})
-
 export const kioskSchema = z.object({
   kioskId: z.string(),
   kioskNm: z.string(),
