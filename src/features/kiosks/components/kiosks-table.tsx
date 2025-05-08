@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { KiosksTablePagination } from './kiosks-table-pagination'
-import { DataTableToolbar } from './data-table-toolbar'
 
 interface KiosksTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -72,7 +71,6 @@ export function KiosksTable<TData, TValue>({
   console.log('KiosksTable', { data, isLoading, pageCount, currentPage })
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
