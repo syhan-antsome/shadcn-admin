@@ -1,4 +1,4 @@
-import { CalendarIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { CalendarIcon, ReloadIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 import { useForm } from "react-hook-form"
@@ -81,26 +81,29 @@ export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: Kiosk
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="p-2">
+        <div className="flex flex-wrap gap-4 items-center">
+          {/* 시작일 필드 */}
           <FormField
             control={form.control}
             name="startDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>설치 시작일</FormLabel>
+              <FormItem className="flex items-center space-x-3 border-r pr-4 my-1">
+                <FormLabel className="text-sm font-medium whitespace-nowrap">
+                  설치 시작일
+                </FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full sm:w-[200px] pl-3 text-left font-normal",
+                          "w-[140px] pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP", { locale: ko })
+                          format(field.value, "yyyy-MM-dd", { locale: ko })
                         ) : (
                           <span>시작일 선택</span>
                         )}
@@ -123,24 +126,28 @@ export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: Kiosk
               </FormItem>
             )}
           />
+
+          {/* 종료일 필드 */}
           <FormField
             control={form.control}
             name="endDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>설치 종료일</FormLabel>
+              <FormItem className="flex items-center space-x-3 border-r pr-4 my-1">
+                <FormLabel className="text-sm font-medium whitespace-nowrap">
+                  종료일
+                </FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full sm:w-[200px] pl-3 text-left font-normal",
+                          "w-[140px] pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP", { locale: ko })
+                          format(field.value, "yyyy-MM-dd", { locale: ko })
                         ) : (
                           <span>종료일 선택</span>
                         )}
@@ -163,21 +170,23 @@ export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: Kiosk
               </FormItem>
             )}
           />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
+
+          {/* 상태 필드 */}
           <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>상태</FormLabel>
+              <FormItem className="flex items-center space-x-3 border-r pr-4 my-1">
+                <FormLabel className="text-sm font-medium whitespace-nowrap">
+                  상태
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   value={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full sm:w-[200px]">
+                    <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="모든 상태" />
                     </SelectTrigger>
                   </FormControl>
@@ -196,19 +205,23 @@ export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: Kiosk
               </FormItem>
             )}
           />
+
+          {/* 유형 필드 */}
           <FormField
             control={form.control}
             name="type"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>유형</FormLabel>
+              <FormItem className="flex items-center space-x-3 border-r pr-4 my-1">
+                <FormLabel className="text-sm font-medium whitespace-nowrap">
+                  유형
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   value={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full sm:w-[200px]">
+                    <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="모든 유형" />
                     </SelectTrigger>
                   </FormControl>
@@ -228,31 +241,48 @@ export function KiosksFilter({ onFilterChange, isLoading, currentFilter }: Kiosk
               </FormItem>
             )}
           />
+
+          {/* 위치 필드 */}
           <FormField
             control={form.control}
             name="location"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>위치</FormLabel>
+              <FormItem className="flex items-center space-x-3 my-1">
+                <FormLabel className="text-sm font-medium whitespace-nowrap">
+                  위치
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="위치 검색"
-                    className="w-full sm:w-[200px]"
+                    className="w-[180px]"
                     {...field}
                   />
                 </FormControl>
               </FormItem>
             )}
           />
-        </div>
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={handleReset}>
-            초기화
-          </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-            필터 적용
-          </Button>
+
+          {/* 버튼 영역 */}
+          <div className="flex gap-2 ml-auto my-1">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              onClick={handleReset}
+              className="h-9"
+            >
+              초기화
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="h-9"
+            >
+              {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+              <MagnifyingGlassIcon className="mr-2 h-4 w-4" />
+              검색
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
