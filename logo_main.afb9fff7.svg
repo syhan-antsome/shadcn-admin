@@ -1,15 +1,4 @@
-interface Props {
-  children: React.ReactNode
-}
-
-export default function AuthLayout({ children }: Props) {
-  return (
-    <div className='bg-primary-foreground container grid h-svh max-w-none items-center justify-center'>
-      <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
-        <div className='mb-4 flex items-center justify-center'>
-
-
-<svg xmlns="http://www.w3.org/2000/svg" width="155.316" height="88.48" viewBox="0 0 310.632 176.959" className="mr-2">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="310.632" height="176.959" viewBox="0 0 310.632 176.959">
   <defs>
     <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
       <stop offset="0" stop-color="#3e6296"/>
@@ -29,10 +18,3 @@ export default function AuthLayout({ children }: Props) {
     <path id="패스_108" data-name="패스 108" d="M583.567,222.47q0-3.393-8.807-3.4H573q-8.808,0-8.807,3.4v7.48q0,3.393,8.807,3.4h1.761q8.808,0,8.807-3.4Zm-8.807-8.5q15.835,0,15.844,8.5v7.48q0,8.505-15.844,8.5H573q-15.863,0-15.844-8.5v-7.48q0-8.505,15.844-8.5Z" transform="translate(-371.395 -61.508)" fill="#1d1d1d"/>
   </g>
 </svg>
-          {/* <h1 className='text-xl font-medium'>Antsome Admin</h1> */}
-        </div>
-        {children}
-      </div>
-    </div>
-  )
-}
