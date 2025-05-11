@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
+import { DoubleArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons"
 
 interface KiosksTablePaginationProps {
   currentPage: number
@@ -73,8 +73,7 @@ export function KiosksTablePagination({
           disabled={isLoading || currentPage === 1}
         >
           <span className="sr-only">첫 페이지</span>
-          <ChevronLeftIcon className="h-4 w-4" />
-          <ChevronLeftIcon className="h-4 w-4 -ml-2" />
+          <DoubleArrowLeftIcon className="h-4 w-4" />
         </Button>
         
         {/* 이전 페이지로 이동하는 버튼 */}
@@ -129,8 +128,7 @@ export function KiosksTablePagination({
           disabled={isLoading || currentPage === totalPages}
         >
           <span className="sr-only">마지막 페이지</span>
-          <ChevronRightIcon className="h-4 w-4" />
-          <ChevronRightIcon className="h-4 w-4 -ml-2" />
+          <DoubleArrowRightIcon className="h-4 w-4" />
         </Button>
       </div>
     </div>
