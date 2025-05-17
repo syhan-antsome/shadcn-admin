@@ -1,10 +1,9 @@
-
 'use client'
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/utils/show-submitted-data'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,69 +22,23 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
+import { Textarea } from '@/components/ui/textarea'
 import { kioskTypes } from '../data/data'
 import { Kiosk } from '../data/schema'
+// 스토어 사용
+import { useKiosksStore } from '../store/kiosks-store'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }),
-    username: z.string().min(1, { message: 'Username is required.' }),
-    phoneNumber: z.string().min(1, { message: 'Phone number is required.' }),
-    email: z
-      .string()
-      .min(1, { message: 'Email is required.' })
-      .email({ message: 'Email is invalid.' }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, { message: 'Role is required.' }),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .superRefine(({ isEdit, password, confirmPassword }, ctx) => {
-    if (!isEdit || (isEdit && password !== '')) {
-      if (password === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password is required.',
-          path: ['password'],
-        })
-      }
+// 키오스크 폼 스키마 정의
+const formSchema = z.object({
+  kioskNm: z.string().min(1, { message: '키오스크 이름은 필수입니다.' }),
+  kioskTp: z.string().min(1, { message: '키오스크 타입은 필수입니다.' }),
+  position: z.string().min(1, { message: '설치 위치는 필수입니다.' }),
+  description: z.string().optional(),
+  status: z.string().default('ACTIVE'),
+  isEdit: z.boolean(),
+})
 
-      if (password.length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must be at least 8 characters long.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/[a-z]/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one lowercase letter.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/\d/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one number.',
-          path: ['password'],
-        })
-      }
-
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Passwords don't match.",
-          path: ['confirmPassword'],
-        })
-      }
-    }
-  })
 type KioskForm = z.infer<typeof formSchema>
 
 interface Props {
@@ -96,35 +49,64 @@ interface Props {
 
 export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
   const isEdit = !!currentRow
+  const { addKiosk, updateKiosk } = useKiosksStore()
+
   const form = useForm<KioskForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
+          kioskNm: currentRow.kioskNm,
+          kioskTp: currentRow.kioskTp,
+          position: currentRow.position,
+          description: currentRow.description || '',
+          status: currentRow.status,
           isEdit,
         }
       : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
+          kioskNm: '',
+          kioskTp: 'STANDARD',
+          position: '',
+          description: '',
+          status: 'ACTIVE',
           isEdit,
         },
   })
 
-  const onSubmit = (values: KioskForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
-  }
+  const onSubmit = async (values: KioskForm) => {
+    try {
+      if (isEdit && currentRow) {
+        // 수정 모드
+        await updateKiosk({
+          ...currentRow,
+          kioskNm: values.kioskNm,
+          kioskTp: values.kioskTp,
+          position: values.position,
+          description: values.description,
+          status: values.status,
+        })
+        toast.success('키오스크가 성공적으로 수정되었습니다.')
+      } else {
+        // 추가 모드
+        await addKiosk({
+          kioskNm: values.kioskNm,
+          kioskTp: values.kioskTp,
+          position: values.position,
+          description: values.description,
+          status: values.status,
+        })
+        toast.success('키오스크가 성공적으로 추가되었습니다.')
+      }
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
+      form.reset()
+      onOpenChange(false)
+    } catch (error) {
+      toast.error(
+        `키오스크 ${isEdit ? '수정' : '추가'} 중 오류가 발생했습니다.`
+      )
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+  }
 
   return (
     <Dialog
@@ -136,30 +118,34 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? 'Edit Kiosk' : 'Add New Kiosk'}</DialogTitle>
+          <DialogTitle>
+            {isEdit ? '키오스크 수정' : '새 키오스크 추가'}
+          </DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit
+              ? '키오스크 정보를 수정합니다. '
+              : '새 키오스크를 추가합니다. '}
+            완료되면 저장 버튼을 클릭하세요.
           </DialogDescription>
         </DialogHeader>
         <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='kiosk-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 p-0.5'
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='kioskNm'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      First Name
+                      키오스크 이름
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='John'
+                        placeholder='키오스크 이름을 입력하세요'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -171,93 +157,16 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='lastName'
+                name='kioskTp'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john_doe'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='john.doe@gmail.com'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='+123456789'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='role'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Role
+                      키오스크 유형
                     </FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select a role'
+                      placeholder='유형을 선택하세요'
                       className='col-span-4'
                       items={kioskTypes.map(({ label, value }) => ({
                         label,
@@ -270,16 +179,17 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='password'
+                name='position'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Password
+                      설치 위치
                     </FormLabel>
                     <FormControl>
-                      <PasswordInput
-                        placeholder='e.g., S3cur3P@ssw0rd'
+                      <Input
+                        placeholder='설치 위치를 입력하세요'
                         className='col-span-4'
+                        autoComplete='off'
                         {...field}
                       />
                     </FormControl>
@@ -289,17 +199,17 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='confirmPassword'
+                name='description'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>
-                      Confirm Password
+                      설명
                     </FormLabel>
                     <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder='e.g., S3cur3P@ssw0rd'
+                      <Textarea
+                        placeholder='키오스크에 대한 추가 설명을 입력하세요'
                         className='col-span-4'
+                        rows={3}
                         {...field}
                       />
                     </FormControl>
@@ -307,12 +217,45 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
+
+              {isEdit && (
+                <FormField
+                  control={form.control}
+                  name='status'
+                  render={({ field }) => (
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                      <FormLabel className='col-span-2 text-right'>
+                        상태
+                      </FormLabel>
+                      <SelectDropdown
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder='상태를 선택하세요'
+                        className='col-span-4'
+                        items={[
+                          { label: '활성', value: 'ACTIVE' },
+                          { label: '비활성', value: 'INACTIVE' },
+                          { label: '정비중', value: 'MAINTENANCE' },
+                        ]}
+                      />
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )}
+                />
+              )}
             </form>
           </Form>
         </div>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
-            Save changes
+          <Button
+            variant='outline'
+            onClick={() => onOpenChange(false)}
+            className='mr-2'
+          >
+            취소
+          </Button>
+          <Button type='submit' form='kiosk-form'>
+            {isEdit ? '수정하기' : '추가하기'}
           </Button>
         </DialogFooter>
       </DialogContent>

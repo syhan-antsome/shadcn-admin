@@ -5,7 +5,7 @@ const API_URL = '/kiosk'
 
 export const KioskService = {
   // 정렬 및 필터링 매개변수에 따라 키오스크 목록을 가져오는 함수
-  getAll: async (
+  getKioskList: async (
     params: KioskParams
   ): Promise<{
     data: Kiosk[]
@@ -48,15 +48,23 @@ export const KioskService = {
       pageCount: Math.ceil(parseInt(response.listTotal, 10) / (params.pageRowNum || 10))
     };
   },
+
+  // 개별 키오스크를 ID로 조회하는 함수
   getById: async (id: string): Promise<Kiosk> => {
     return await api.get<Kiosk>(`${API_URL}/${id}`)
   },
-  create: async (kiosk: Kiosk): Promise<Kiosk> => {
+  
+  // 키오스크 생성
+  addKiosk: async (kiosk: Kiosk): Promise<Kiosk> => {
     return await api.post<Kiosk>(API_URL, kiosk)
   },
+  
+  // 키오스크 수정
   update: async (id: string, kiosk: Kiosk): Promise<Kiosk> => {
     return await api.put<Kiosk>(`${API_URL}/${id}`, kiosk)
   },
+  
+  // 키오스크 삭제
   delete: async (id: string): Promise<void> => {
     return await api.delete<void>(`${API_URL}/${id}`)
   },

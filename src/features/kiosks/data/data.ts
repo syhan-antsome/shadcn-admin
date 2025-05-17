@@ -1,9 +1,3 @@
-import {
-  // IconCash,
-  IconShield,
-  // IconUsersGroup,
-  IconUserShield,
-} from '@tabler/icons-react'
 import { UserStatus } from './schema'
 
 export const callTypes = new Map<UserStatus, string>([
@@ -17,14 +11,9 @@ export const callTypes = new Map<UserStatus, string>([
 ])
 
 export const kioskTypes = [
-  {
-    label: 'LPR',
-    value: 'LPR',
-    icon: IconUserShield,
-  },
-  {
-    label: '무인장비',
-    value: 'UNMAN',
-    icon: IconShield,
-  },
+  { label: '표준형', value: 'STANDARD' },
+  { label: '실외형', value: 'OUTDOOR' },
+  { label: '벽부착형', value: 'WALL_MOUNT' },
+  { label: '테이블형', value: 'TABLE' },
+  { label: '드라이브스루', value: 'DRIVE_THRU' },
 ] as const
