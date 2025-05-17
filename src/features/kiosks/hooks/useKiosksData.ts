@@ -1,74 +1,38 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { KioskService } from '../services/kiosk-service'
-import { kiosks as localKiosks } from '../data/kiosks'
-
-// KioskParams 타입 정의 (오타 수정)
-export interface KioskParams {
-  page: number;
-  pageRowNum: number;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  keyword: string;
-  kioskTp: string;
-  search?: string; // Search 컴포넌트에서 사용
-}
+import { useEffect } from 'react'
+import { useKiosksStore, selectKioskList, selectIsLoading } from '../store/kiosks-store'
 
 export function useKiosksData() {
-  const [params, setParams] = useState<KioskParams>({
-    page: 1,
-    pageRowNum: 10,
-    sortBy: 'kioskId',
-    sortOrder: 'asc',
-    keyword: '',
-    kioskTp: '',
-  });
-
-  // 서버에서 키오스크 데이터 가져오기
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['kiosks', params],
-    queryFn: () => KioskService.getAll(params),
-    staleTime: 60 * 1000, // 1분 동안 데이터를 신선한 상태로 유지
-    placeholderData: localKiosks, // 로딩 중에 표시할 기본 데이터
-    retry: 1, // 실패 시 한 번만 재시도
-  });
-
-  // 페이지 변경 핸들러
-  const handlePageChange = (page: number) => {
-    setParams((prev) => ({ ...prev, page }));
-  };
-
-  // 정렬 변경 핸들러
-  const handleSortChange = (sortBy: string, sortOrder: 'asc' | 'desc') => {
-    setParams((prev) => ({ ...prev, sortBy, sortOrder }));
-  };
-
-  // 필터링 변경 핸들러
-  const handleFilterChange = (filter: Partial<KioskParams>) => {
-    const prevParams = {...params};
-    setParams((prev) => ({ ...prev, ...filter, page: 1 }));
-    
-    // 동일한 필터 조건인 경우(예: 같은 검색어로 재검색)에도 강제로 refetch
-    if (JSON.stringify({...params, ...filter, page: 1}) === JSON.stringify(prevParams)) {
-      refetch();
-    }
-  };
-
+  // Zustand 스토어에서 필요한 상태와 액션 가져오기
+  const kioskList = useKiosksStore(selectKioskList)
+  const isLoading = useKiosksStore(selectIsLoading)
+  
+  const total = useKiosksStore((state) => state.total)
+  const pageCount = useKiosksStore((state) => state.pageCount)
+  const error = useKiosksStore((state) => state.error)
+  const params = useKiosksStore((state) => state.params)
+  
+  // 액션 가져오기
+  const fetchKiosks = useKiosksStore((state) => state.fetchKiosks)
+  const handlePageChange = useKiosksStore((state) => state.handlePageChange)
+  const handleSortChange = useKiosksStore((state) => state.handleSortChange)
+  const handleFilterChange = useKiosksStore((state) => state.handleFilterChange)
+  
+  // 컴포넌트 마운트 시 데이터 로드
+  useEffect(() => {
+    fetchKiosks()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchKiosks])
+  
   return {
-    kioskList: data?.data || [],
-    total: data?.total || 0,
-    pageCount: data?.pageCount || 1,
+    kioskList,
+    total,
+    pageCount,
     isLoading,
     error,
     params,
     handlePageChange,
     handleSortChange,
     handleFilterChange,
-    refetch,
-  };
+    refetch: fetchKiosks
+  }
 }
