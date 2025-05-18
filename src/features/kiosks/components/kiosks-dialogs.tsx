@@ -1,49 +1,56 @@
 import { useKiosks } from '../context/kiosks-context'
 import { KiosksActionDialog } from './kiosks-action-dialog'
 import { KiosksDeleteDialog } from './kiosks-delete-dialog'
-import { KiosksInviteDialog } from './kiosks-invite-dialog'
 
 export function KiosksDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useKiosks()
+
+  // 다이얼로그 닫기 핸들러
+  const handleClose = () => {
+    setOpen(null)
+    // 다이얼로그가 닫힌 후 currentRow 초기화
+    setTimeout(() => {
+      setCurrentRow(null)
+    }, 300)
+  }
+  
+
+  // eslint-disable-next-line no-console
+  console.log('KiosksDialogs rendered with open:', open, 'currentRow:', currentRow)
   return (
     <>
+      {/* 키오스크 추가 다이얼로그 */}
       <KiosksActionDialog
-        key='user-add'
+        key='kiosk-add'
         open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) handleClose()
+        }}
       />
-
-      <KiosksInviteDialog
-        key='user-invite'
-        open={open === 'invite'}
-        onOpenChange={() => setOpen('invite')}
-      />
-
+      
+      {/* 키오스크 수정 다이얼로그 - currentRow가 있을 때만 렌더링 */}
       {currentRow && (
         <>
           <KiosksActionDialog
-            key={`user-edit-${currentRow.id}`}
+            key={`kiosk-edit-${currentRow.id || currentRow.kioskId}`}
             open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+            onOpenChange={(isOpen) => {
+              if (!isOpen) handleClose()
             }}
             currentRow={currentRow}
           />
 
+          {/* 키오스크 삭제 다이얼로그 */}
           <KiosksDeleteDialog
-            key={`user-delete-${currentRow.id}`}
+            key={`kiosk-delete-${currentRow.id || currentRow.kioskId}`}
             open={open === 'delete'}
-            onOpenChange={() => {
-              setOpen('delete')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+            onOpenChange={(isOpen) => {
+              if (!isOpen) handleClose()
             }}
             currentRow={currentRow}
           />
+          
+          {/* 필요한 다른 다이얼로그들... */}
         </>
       )}
     </>

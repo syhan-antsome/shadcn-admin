@@ -45,8 +45,6 @@ export const filterSchema = z.object({
 
 export type KioskFilter = z.infer<typeof filterSchema>
 
-export type KiosksDialogType = 'create' | 'update' | 'delete' | null
-
 // 정렬 및 필터링 매개변수용 타입 정의
 export type KioskParams = {
   page?: number;

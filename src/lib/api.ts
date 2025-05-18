@@ -66,6 +66,14 @@ export const api = {
     })
   },
   
+  patch<T>(url: string, data?: unknown, options?: RequestInit): Promise<T> {
+    return this.request<T>(url, {
+      ...options,
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined
+    })
+  },
+  
   delete<T>(url: string, options?: RequestInit): Promise<T> {
     return this.request<T>(url, { ...options, method: 'DELETE' })
   }

@@ -33,6 +33,7 @@ interface KiosksState {
   // 수정 액션
   addKiosk: (kiosk: Partial<Kiosk>) => Promise<void>
   updateKiosk: (kiosk: Kiosk) => Promise<void>
+  deleteKiosk: (kioskId: string) => Promise<void>
 }
 
 export const useKiosksStore = create<KiosksState>((set, get) => {
@@ -93,7 +94,7 @@ export const useKiosksStore = create<KiosksState>((set, get) => {
         // 키오스크 추가 API 호출
         await KioskService.addKiosk(kiosk)
         // 추가 후 파라미터 초기화 및 데이터 재조회
-        updateParams({ page: 1 }, true)
+        get().fetchKiosks();
       } catch (error) {
         set({ error: error as Error, isLoading: false })
         throw error
@@ -107,8 +108,23 @@ export const useKiosksStore = create<KiosksState>((set, get) => {
         // 키오스크 수정 API 호출
         await KioskService.updateKiosk(kiosk)
         // 수정 후 파라미터 초기화 및 데이터 재조회
-        updateParams({ page: 1 }, true)
+        get().fetchKiosks();
       } catch (error) {
+        set({ error: error as Error, isLoading: false })
+        throw error
+      }
+    },
+
+    // 키오스크 삭제 함수
+    deleteKiosk: async (kioskId: string) => {
+      try {
+        set({ isLoading: true, error: null })
+        // 키오스크 삭제 API 호출
+        await KioskService.deleteKiosk(kioskId)
+        // 삭제 후 파라미터 초기화 및 데이터 재조회
+        get().fetchKiosks();
+      }
+      catch (error) {
         set({ error: error as Error, isLoading: false })
         throw error
       }

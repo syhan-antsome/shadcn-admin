@@ -59,13 +59,13 @@ export const KioskService = {
     return await api.post<Kiosk>(API_URL, kiosk)
   },
   
-  // 키오스크 수정
-  update: async (id: string, kiosk: Kiosk): Promise<Kiosk> => {
-    return await api.put<Kiosk>(`${API_URL}/${id}`, kiosk)
+  // 키오스크 수정 (일반수정)
+  updateKiosk: async (kiosk: Kiosk): Promise<Kiosk> => {
+    return await api.patch<Kiosk>(API_URL, kiosk)
   },
   
   // 키오스크 삭제
-  delete: async (id: string): Promise<void> => {
+  deleteKiosk: async (id: string): Promise<void> => {
     return await api.delete<void>(`${API_URL}/${id}`)
   },
 }

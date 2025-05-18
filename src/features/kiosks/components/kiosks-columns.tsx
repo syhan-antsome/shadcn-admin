@@ -1,75 +1,82 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Kiosk } from "../data/schema"
-import { Badge } from "@/components/ui/badge"
+import { ColumnDef } from '@tanstack/react-table'
+import { ArrowUpDown } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Kiosk } from '../data/schema'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export const columns: ColumnDef<Kiosk>[] = [
   {
-    accessorKey: "kioskId",
-    header: "ID",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("kioskId")}</div>,
+    accessorKey: 'kioskId',
+    header: 'ID',
+    cell: ({ row }) => (
+      <div className='font-medium'>{row.getValue('kioskId')}</div>
+    ),
   },
   {
-    accessorKey: "kioskNm",
+    accessorKey: 'kioskNm',
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           키오스크 이름
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
     },
   },
   {
-    accessorKey: "position",
-    header: "위치",
+    accessorKey: 'position',
+    header: '위치',
   },
   {
-    accessorKey: "status",
-    header: "상태",
+    accessorKey: 'status',
+    header: '상태',
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const status = row.getValue('status') as string
 
       const getStatusBadge = (status: string) => {
         switch (status) {
-          case "active":
+          case 'active':
             return (
-              <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+              <Badge
+                variant='outline'
+                className='border-green-200 bg-green-100 text-green-800'
+              >
                 활성
               </Badge>
             )
-          case "inactive":
+          case 'inactive':
             return (
-              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-slate-200">
+              <Badge
+                variant='outline'
+                className='border-slate-200 bg-slate-100 text-slate-800'
+              >
                 비활성
               </Badge>
             )
-          case "maintenance":
+          case 'maintenance':
             return (
-              <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
+              <Badge
+                variant='outline'
+                className='border-amber-200 bg-amber-100 text-amber-800'
+              >
                 유지보수
               </Badge>
             )
-          case "offline":
+          case 'offline':
             return (
-              <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
+              <Badge
+                variant='outline'
+                className='border-red-200 bg-red-100 text-red-800'
+              >
                 오프라인
               </Badge>
             )
           default:
-            return <Badge variant="outline">{status}</Badge>
+            return <Badge variant='outline'>{status}</Badge>
         }
       }
 
@@ -77,16 +84,19 @@ export const columns: ColumnDef<Kiosk>[] = [
     },
   },
   {
-    accessorKey: "kioskTp",
-    header: "유형",
+    accessorKey: 'kioskTp',
+    header: '유형',
     cell: ({ row }) => {
-      const type = row.getValue("kioskTp") as string
+      const type = row.getValue('kioskTp') as string
 
       const getTypeLabel = (type: string) => {
         switch (type) {
-          case "LPR": return "LPR"
-          case "UNMAN": return "무인장비"
-          default: return type
+          case 'LPR':
+            return 'LPR'
+          case 'UNMAN':
+            return '무인장비'
+          default:
+            return type
         }
       }
 
@@ -94,40 +104,15 @@ export const columns: ColumnDef<Kiosk>[] = [
     },
   },
   {
-    accessorKey: "regDt",
-    header: "설치일",
+    accessorKey: 'regDt',
+    header: '설치일',
   },
   {
-    accessorKey: "lastConnectionDate",
-    header: "마지막 연결",
+    accessorKey: 'lastConnectionDate',
+    header: '마지막 연결',
   },
   {
-    id: "actions",
-    cell: ({ row }) => {
-      const kiosk = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">메뉴 열기</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>작업</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(kiosk.kioskId)}
-            >
-              ID 복사
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>상세 정보 보기</DropdownMenuItem>
-            <DropdownMenuItem>정보 수정</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">삭제</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    id: 'actions',
+    cell: ({ row }) => <DataTableRowActions row={row} />
   },
 ]

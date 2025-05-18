@@ -34,7 +34,7 @@ const formSchema = z.object({
   kioskNm: z.string().min(1, { message: '키오스크 이름은 필수입니다.' }),
   kioskTp: z.string().min(1, { message: '키오스크 타입은 필수입니다.' }),
   position: z.string().min(1, { message: '설치 위치는 필수입니다.' }),
-  description: z.string().optional(),
+  info: z.string().optional(),
   status: z.string().default('ACTIVE'),
   isEdit: z.boolean(),
 })
@@ -58,7 +58,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
           kioskNm: currentRow.kioskNm,
           kioskTp: currentRow.kioskTp,
           position: currentRow.position,
-          description: currentRow.description || '',
+          info: currentRow.info || '',
           status: currentRow.status,
           isEdit,
         }
@@ -66,7 +66,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
           kioskNm: '',
           kioskTp: 'STANDARD',
           position: '',
-          description: '',
+          info: '',
           status: 'ACTIVE',
           isEdit,
         },
@@ -81,7 +81,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
           kioskNm: values.kioskNm,
           kioskTp: values.kioskTp,
           position: values.position,
-          description: values.description,
+          info: values.info,
           status: values.status,
         })
         toast.success('키오스크가 성공적으로 수정되었습니다.')
@@ -91,7 +91,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
           kioskNm: values.kioskNm,
           kioskTp: values.kioskTp,
           position: values.position,
-          description: values.description,
+          info: values.info,
           status: values.status,
         })
         toast.success('키오스크가 성공적으로 추가되었습니다.')
@@ -199,7 +199,7 @@ export function KiosksActionDialog({ currentRow, open, onOpenChange }: Props) {
               />
               <FormField
                 control={form.control}
-                name='description'
+                name='info'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-right'>

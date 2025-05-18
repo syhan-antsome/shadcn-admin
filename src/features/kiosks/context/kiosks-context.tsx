@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { Kiosk, KiosksDialogType } from '../data/schema'
+import { Kiosk } from '../data/schema'
+
+type KiosksDialogType = 'add' | 'edit' | 'delete' | 'view' | null
 
 interface KiosksContextType {
   open: KiosksDialogType
   setOpen: (type: KiosksDialogType) => void
-  currentKiosk: Kiosk | null
-  setCurrentKiosk: React.Dispatch<React.SetStateAction<Kiosk | null>>
+  currentRow: Kiosk | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Kiosk | null>>
 }
 
-const KiosksContext = React.createContext<KiosksContextType | null>(null)
+const KiosksContext = createContext<KiosksContextType | null>(null)
 
 interface Props {
   children: React.ReactNode
@@ -17,10 +19,10 @@ interface Props {
 
 export default function KiosksProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<KiosksDialogType>(null)
-  const [currentKiosk, setCurrentKiosk] = useState<Kiosk | null>(null)
+  const [currentRow, setCurrentRow] = useState<Kiosk | null>(null)
 
   return (
-    <KiosksContext.Provider value={{ open, setOpen, currentKiosk, setCurrentKiosk }}>
+    <KiosksContext.Provider value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
     </KiosksContext.Provider>
   )
@@ -28,7 +30,7 @@ export default function KiosksProvider({ children }: Props) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useKiosks = () => {
-  const context = React.useContext(KiosksContext)
+  const context = useContext(KiosksContext)
   if (!context) {
     throw new Error('useKiosks must be used within a KiosksProvider')
   }
