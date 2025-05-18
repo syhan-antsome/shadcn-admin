@@ -66,8 +66,6 @@ export function KiosksTable<TData, TValue>({
     }
   })
 
-  // eslint-disable-next-line no-console
-  console.log('KiosksTable', { data, isLoading, pageCount, currentPage })
   return (
     <div className='space-y-4'>
       <div className='rounded-md border'>

@@ -56,9 +56,6 @@ export function KiosksTablePagination({
   // 페이지 번호 버튼 배열
   const pageNumbers = getPageNumbers();
 
-  // eslint-disable-next-line no-console
-  console.log("pageNumbers :: ", pageNumbers)
-
   return (
     <div className="flex items-center justify-between px-2 py-4">
       <div className="flex-1 text-sm text-muted-foreground hidden sm:block">

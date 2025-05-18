@@ -13,10 +13,7 @@ export function KiosksDialogs() {
       setCurrentRow(null)
     }, 300)
   }
-  
 
-  // eslint-disable-next-line no-console
-  console.log('KiosksDialogs rendered with open:', open, 'currentRow:', currentRow)
   return (
     <>
       {/* 키오스크 추가 다이얼로그 */}
