@@ -16,12 +16,12 @@ export const Route = createFileRoute('/_authenticated')({
       const currentPath = window.location.pathname
 
       // 로그인 페이지로 리다이렉트하고 원래 경로를 쿼리 파라미터로 전달
-      return redirect({
-        to: '/sign-in',
-        search: {
-          redirect: currentPath,
-        },
-      })
+      // return redirect({
+      //   to: '/sign-in',
+      //   search: {
+      //     redirect: currentPath,
+      //   },
+      // })
     }
   },
   component: RouteComponent,
